@@ -1,0 +1,471 @@
+---
+import Layout from '../layouts/Layout.astro';
+import localSecguyImage from '../cyber-portfolio/img/ascii-art.png';
+---
+
+<Layout title="> h4x0r@realm | terminal portfolio">
+  <header>
+    <nav>
+      <div class="logo">h4x0r@realm</div>
+      <ul class="nav-links">
+        <li><a href="/blog">blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="terminal-window terminal-main">
+      <div class="terminal-header">
+        <span class="terminal-title">ssh@visitor:~</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div class="output-line">
+          <span class="comment"># Welcome to my terminal portfolio 🐱‍💻💚</span>
+        </div>
+        <div class="output-line">
+          <span class="comment"># Type 'help' to see available commands</span>
+        </div>
+      </div>
+      <div class="terminal-input-line">
+        <span class="prompt">ssh@visitor</span>:<span class="prompt-path">~</span>$ 
+        <input type="text" id="terminal-input" autofocus autocomplete="off" spellcheck="false" />
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="color: var(--text-secondary); font-size: 0.85rem;">
+        <span class="prompt">$</span> cat $footer.md:
+        <span class="comment"># Built with 💚 & curiosity | No tracking, no cookies, just vibes</span>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const terminalBody = document.getElementById('terminal-body');
+    const terminalInput = document.getElementById('terminal-input');
+    
+    const commands = {
+      help: () => `<span class="success">[+] Available commands:</br></span>
+
+<span class="info">  whoami</span>     - Display user info</br>
+<span class="info">  experience</span>      - View professional experience</br>
+<span class="info">  skills</span>     - View my skill set</br>
+<span class="info">  tools</span>      - View security tools</br>
+<span class="info">  certs</span>      - View certifications</br>
+<span class="info">  projects</span>   - See my work</br>
+<span class="info">  contact</span>    - Get in touch</br>
+<span class="info">  clear</span>      - Clear terminal</br>
+<span class="info">  sudo</span>       - Run as superuser</br>
+<span class="info">  theme</span>      - Switch themes (cyberpunk/amber/matrix/bluesteel/default)`,
+
+      whoami: () => `<span class="prompt">$</span> cat ./bio.txt
+
+
+<span class="comment">##Professional Summary:</br></span>
+<div class="whoami-grid">
+  <div class="item">
+    <div class="pixel-art-container">
+      <img src="/img/ascii-art2.png" alt="Pixel Art" class="pixel-art-img" />
+    </div>
+  </div>
+  <div class="item">
+    <p>
+      Ricardo is a systems engineer, with a strong focus on active learning and Cybersecurity issues, passionate experience tackling challenges and dedicated to continuous improvement.</br>
+    </p>
+    <span class="comment">Languages:</br></span>
+    <span class="info">  -</span> English Oral Level: Advanced | Written Level: Advanced | Reading Level: Advanced</br>
+  </div>
+</div>`,
+
+      experience: () => `<span class="prompt">$</span> cat ./experience.txt
+
+<span class="comment">## Experience</br></span>
+
+<span class="success">[1]</span> <span class="prompt">Optiplant Consultores</br></span>
+  Role: Junior Security Engineer</br>
+  Period: June 17, 2024 - Present</br>
+  <p>Active collaboration with development teams to integrate security controls into the the SDLC, enhancement overall code security.</p>
+  <span class="comment">Key tasks:</br></span>
+  <span class="info">  -</span> Security Code Analysis & SDLC integration</br>
+  <span class="info">  -</span> Incident Response & SIEM management</br>
+  <span class="info">  -</span> Security training for co-workers</br>
+
+<span class="success">[2]</span> <span class="prompt">Mastercard (Forage)</br></span>
+  Role: Security Awareness Analyst</br>
+  Period: April 26, 2024</br>
+  <p>Fully remote internship focused on Phishing email simulation and Phishing simulation exercise.</p>
+  <span class="comment">Key tasks:</br></span>
+  <span class="info">  -</span> Phishing simulations & IOC analysis</br>
+  <span class="info">  -</span> Security awareness training content</br>
+
+<span class="success">[3]</span> <span class="prompt">EKU</br></span>
+  Role: ICS User Experience Researcher</br>
+  Period: March 2022 to March 2024</br>
+  <p>Intuitive and adaptive Design for UI’s, streamlining complex information into clean and easy-to-process formats, enhancing end user experience (UX).</p>
+  <span class="comment">Key tasks:</br></span>
+  <span class="info">  -</span> Intuitive and adaptive Design for UI’s, streamlining complex information into clean and easy-to-process formats, enhancing end user experience (UX).</br>
+
+<span class="success">[4]</span> <span class="prompt">Atenea Institute</br></span>
+  Role: Web Design Teacher</br>
+  Period: February 2021 to April 2022</br>
+  <span class="comment">Key tasks:</br></span>
+  <span class="info">  -</span> Web Design and development fundamentals and Active research and guidance leaned to positive learning and efficient project development.</br>
+
+<span class="success">[5]</span> <span class="prompt">Uniformes Victoriam</br></span>
+  Role: Consultant in Web and Electronic Security</br>
+  Period: April 2018 to October 2020</br>
+  <span class="comment">Key tasks:</br></span>
+  <span class="info">  -</span> Physical security consulting (alarms systems and CCTV surveillance)</br>
+  <span class="info">  -</span> Web security consulting.</br>`,
+
+      skills: () => `<span class="prompt">$</span> cat skills.txt
+
+<span class="comment">## Technical Skills</br></span>
+<span class="info">Networking</span>
+  <span class="success">███████████████░░░░░</span> 85%</br>
+
+<span class="info">Vulnerability Assessment</span>
+  <span class="success">████████████████░░</span> 90%</br>
+
+<span class="info">Incident Response</span>
+  <span class="success">███████████████░░░</span> 88%</br>
+
+<span class="info">Security Code Review</span>
+  <span class="success">███████████████░░░</span> 85%</br>
+
+<span class="info">Infrastructure & VM</span>
+  <span class="success">██████████████░░░░</span> 80%</br>`,
+
+      tools: () => `<span class="prompt">$</span> cat tools.txt
+
+<span class="comment">## Security Tools</br></span>
+<span class="info">[Scripting]</br></span>
+  Python, Bash, PowerShell.</br>
+
+<span class="info">[SIEM]</br></span>
+  Wazuh, Security Onion, Splunk.</br>
+
+<span class="info">[Network]</br></span>
+  Scan/Sniffing: Nmap, Wireshark.</br> Recon: tcpdump, dnsrecon, sublist3r, subfinder.</br>
+
+<span class="info">[Vulnerability Analysis]</br></span>
+  Burp Suite, OWASP ZAP, Caido.</br>
+
+<span class="info">[Security Code Review]</br></span>
+  Semgrep, Snyk, Sonarqube.</br>
+
+<span class="info">[Virtualization & containerization]</br></span>
+  Hypervisors/VM platforms: Proxmox, VMware, VirtualBox.</br> Containers managment and runtime: Docker, Portainer.</br> VDI/Browser isolation: Kasm.</br>
+
+<span class="info">[Remote device management]</br></span>
+  Meshcentral.</br>`,
+
+      projects: () => `<span class="prompt">$</span> ls -la projects/</br>
+
+<span class="success">[drwxr-xr-x]</span> security-lab</br>
+<span class="success">[-rw-r--r--]</span> code-review-reports/</br>
+<span class="success">[-rw-r--r--]</span> incident-response-docs/</br>
+<span class="success">[drwxr-xr-x]</span> automation-scripts/</br>
+<span class="success">[drwxr-xr-x]</span> ctf-writeups/</br>
+
+<span class="comment"># Security work in progress...</span>`,
+
+      contact: () => `<span class="prompt">$</span> cat contact.txt</br>
+
+<span class="success">[+] Let's connect!</br></span>
+
+<span class="info">Email:</span>    sec_dot_rs@proton.me</br>
+<span class="info">GitHub:</span>   github.com/res34rch3r`,
+
+      certs: () => `<span class="prompt">$</span> cat certs.txt
+
+<span class="success">[+] Certifications</br></span>
+
+<span class="info">CertJoin certificates:</br></span>
+<span class="info">[2023]</span> Ethical Hacking Certified Associate</br>
+
+<span class="info">Udemy certificates:</br></span>
+<span class="info">[2024]</span> Physical Security in IT</br>
+<span class="info">[2024]</span> Desktop App Testing Methodology</br>
+
+<span class="info">CyberWarFare Labs certificate:</br></span>
+<span class="info">[2024]</span> Blue Team Fundamentals</br>
+
+<span class="info">Antisyphon Training & Black Hills Information Security certificates:</br></span>
+<span class="info">[2024]</span> Incident Case Study for SMB</br>
+<span class="info">[2024]</span> How to Bypass Modern Phishing Detections</br>
+<span class="info">[2025]</span> AI Agents and MCP Security Risks</br>
+<span class="info">[2025]</span> Hacking JavaScript Desktop Apps with XSS and RCE</br>
+<span class="info">[2025]</span> Finding Secrets with JavaScript Console</br>
+<span class="info">[2026]</span> Red Teaming AI: OWASP LLM Top 10</br>
+<span class="info">[2026]</span> How to Detect Malicious Remote Workers</br>
+<span class="info">[2026]</span> Breach Assessment - The Curious Case of the Comburglar</br>
+<span class="info">[2026]</span> Securing the Cloud in the Age of AI</br>
+<span class="info">[2026]</span> SOC Summit 2026</br>
+<span class="info">[2026]</span> Learning to Trust AI Agents with Automation</br>
+<span class="comment"># For a more complete list of Antisyphon Training & BHIS certifications, click here: <a href="https://www.credential.net/profile/ricardosolano542916/wallet" target="_blank" rel="noopener noreferrer">Certifications</a></span>`,
+
+      clear: () => 'CLEAR',
+
+      sudo: () => `<span class="error">[!] Permission denied</span>
+<span class="warning">[!] This incident will be reported.</br> Origin ip-reverse lookup in progress...</br> All systems and credentials compromised!</br></span>
+
+<span class="comment"># Just kidding. Nice try 😄</span>`,
+
+      theme: (args) => {
+        const themes = ['cyberpunk', 'amber', 'matrix', 'bluesteel'];
+        const currentTheme = localStorage.getItem('terminal-theme') || 'default';
+        
+        if (!args[1]) {
+          return `<span class="prompt">$</span> theme
+
+<span class="success">[+] Current theme:</span> ${currentTheme}
+
+<span class="comment">## Available themes:</span>
+<span class="info">cyberpunk</span>  - Neon pink, cyan, purple
+<span class="info">amber</span>       - Warm amber retro terminal
+<span class="info">matrix</span>      - Classic green matrix style
+<span class="info">bluesteel</span>   - Blue CRT monitor style
+<span class="info">default</span>     - Classic green terminal
+
+<span class="comment"># Usage: theme [name]</span>`;
+        }
+        
+        const newTheme = args[1].toLowerCase();
+        if (themes.includes(newTheme) || newTheme === 'default') {
+          if (newTheme === 'default') {
+            document.documentElement.removeAttribute('data-theme');
+          } else {
+            document.documentElement.setAttribute('data-theme', newTheme);
+          }
+          localStorage.setItem('terminal-theme', newTheme);
+          return `<span class="prompt">$</span> theme ${newTheme}
+
+<span class="success">[+] Theme changed to:</span> ${newTheme}
+<span class="comment"># Reload to apply</span>`;
+        }
+        
+        return `<span class="error">[!] Unknown theme:</span> ${newTheme}
+<span class="comment"># Available: cyberpunk, amber, matrix, bluesteel, default</span>`;
+      },
+
+      ls: () => `<span class="prompt">$</span> ls -la
+
+total 5
+<span class="info">drwxr-xr-x</span>  experience.txt
+<span class="info">drwxr-xr-x</span>  blog/
+<span class="info">drwxr-xr-x</span>  contact.txt
+<span class="info">drwxr-xr-x</span>  skills.txt
+<span class="info">-rw-r--r--</span>  README.md
+
+<span class="comment"># Tip: Try 'help' to see all commands</span>`,
+
+      cat: (args) => {
+        if (!args[1]) return `<span class="error">[!] Usage: cat [filename]</span>\n<span class="comment"># Try: cat experience.txt, cat skills.txt</span>`;
+        const file = args[1];
+        if (file === 'experience.txt' || file === 'experience') return commands.experience();
+        if (file === 'skills.txt' || file === 'skills') return commands.skills();
+        if (file === 'contact.txt' || file === 'contact') return commands.contact();
+        if (file === 'certs.txt' || file === 'certs') return commands.certs();
+        if (file === 'blog/index.txt' || file === 'blog') return commands.blog();
+        if (file === 'tools.txt' || file === 'tools') return commands.tools();
+        return `<span class="error">[!] cat: ${file}: No such file or directory</span>`;
+      }
+    };
+
+    const history = [];
+    let historyIndex = -1;
+
+    function executeCommand(cmd) {
+      const parts = cmd.trim().split(' ');
+      const command = parts[0].toLowerCase();
+      const args = parts;
+
+      if (command === '') return;
+
+      history.push(cmd);
+      historyIndex = history.length;
+
+      if (command === 'clear') {
+        clearTerminal();
+        return;
+      }
+
+      const output = commands[command] ? commands[command](args) : 
+        `<span class="error">[!] Command not found: ${escapeHtml(command)}</span>\n<span class="comment"># Type 'help' for available commands</span>`;
+
+      addOutput(cmd, output);
+    }
+
+    function addOutput(cmd, output) {
+      const inputLine = terminalBody.querySelector('.output-line:last-child');
+      if (inputLine) {
+        inputLine.innerHTML = `<span class="prompt">ssh@visitor</span>:<span class="prompt-path">~</span>$ ${escapeHtml(cmd)}`;
+      }
+
+      const outputDiv = document.createElement('div');
+      outputDiv.className = 'terminal-output-cmd';
+      outputDiv.innerHTML = output;
+      terminalBody.appendChild(outputDiv);
+
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+    function clearTerminal() {
+      terminalBody.innerHTML = `
+        <div class="output-line">
+          <span class="comment"># Welcome to my terminal portfolio 🐱‍💻💚</span>
+        </div>
+        <div class="output-line">
+          <span class="comment"># Type 'help' to see available commands</span>
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    window.clearTerminal = clearTerminal;
+
+    const savedTheme = localStorage.getItem('terminal-theme');
+    if (savedTheme) {
+      if (savedTheme === 'default') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    }
+
+    terminalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        executeCommand(terminalInput.value);
+        terminalInput.value = '';
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIndex > 0) {
+          historyIndex--;
+          terminalInput.value = history[historyIndex];
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex < history.length - 1) {
+          historyIndex++;
+          terminalInput.value = history[historyIndex];
+        } else {
+          historyIndex = history.length;
+          terminalInput.value = '';
+        }
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.terminal-input-line')) {
+        terminalInput.focus();
+      }
+    });
+
+    terminalBody.parentElement.addEventListener('click', () => {
+      terminalInput.focus();
+    });
+  </script>
+</Layout>
+
+<style>
+  main {
+    height: calc(100vh - 60px);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 15px;
+  }
+
+  .terminal-main {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 1400px) {
+    .terminal-main {
+      max-width: 1400px;
+    }
+  }
+
+  .terminal-main .terminal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .terminal-header {
+    padding: 8px 15px;
+  }
+
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(13, 17, 23, 0.5);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .terminal-input-line .prompt {
+    white-space: nowrap;
+  }
+
+  .terminal-input-line .prompt-path {
+    margin-right: 8px;
+  }
+
+  #terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    caret-color: var(--accent-green);
+  }
+
+  .terminal-output-cmd {
+    margin: 10px 0 20px 0;
+    line-height: 1.8;
+  }
+
+  .whoami-grid {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .whoami-grid .item {
+    flex: 1;
+  }
+
+  @media (max-width: 600px) {
+    .whoami-grid {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 768px) {
+    main {
+      padding: 10px;
+    }
+
+    .terminal-main .terminal-body {
+      font-size: 0.85rem;
+      padding: 15px;
+    }
+  }
+</style>

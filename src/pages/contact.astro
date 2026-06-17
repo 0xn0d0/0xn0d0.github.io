@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="> contact | cyber portfolio">
+  <header>
+    <nav>
+      <div class="logo">root@cyber</div>
+      <ul class="nav-links">
+        <li><a href="/">home</a></li>
+        <li><a href="/about">about</a></li>
+        <li><a href="/blog">blog</a></li>
+        <li><a href="/contact">contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="terminal-window" style="max-width: 700px; margin: 0 auto;">
+          <div class="terminal-header">
+            <span class="terminal-title">contact.sh</span>
+          </div>
+          <div class="terminal-body">
+            <div class="output-line">
+              <span class="prompt">root@cyber</span>:<span class="prompt-path">~/contact</span>$ 
+              <span class="info">cat</span> contact_info.asc
+            </div>
+            <div style="margin-top: 20px; line-height: 2;">
+              <p class="success">[+] Let's connect</p>
+              <p style="color: var(--text-secondary); margin-top: 15px;">
+                Interested in collaboration, security consulting, or just want to chat about 
+                cybersecurity? Feel free to reach out.
+              </p>
+            </div>
+
+            <div style="margin-top: 30px;">
+              <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <span style="color: var(--accent-cyan);">▸</span>
+                <span>Email:</span>
+                <a href="mailto:contact@example.com" style="color: var(--accent-green);">contact@example.com</a>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <span style="color: var(--accent-cyan);">▸</span>
+                <span>GitHub:</span>
+                <a href="https://github.com" style="color: var(--accent-green);">github.com/username</a>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <span style="color: var(--accent-cyan);">▸</span>
+                <span>Twitter:</span>
+                <a href="https://twitter.com" style="color: var(--accent-green);">@username</a>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: var(--accent-cyan);">▸</span>
+                <span>PGP:</span>
+                <span style="color: var(--text-secondary);">4A7B 9C2D 1E8F...</span>
+              </div>
+            </div>
+
+            <div class="terminal-output" style="margin-top: 30px;">
+              <div class="output-line">
+                <span class="prompt">$</span> ./send_message.sh
+              </div>
+              <div class="output-line warning" style="margin-top: 10px;">
+                [!] Direct messaging coming soon...
+              </div>
+              <div class="output-line" style="margin-top: 10px;">
+                <span class="comment"># For now, use the channels above</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="color: var(--text-secondary); font-size: 0.85rem;">
+        <span class="prompt">$</span> <span class="cursor"></span>
+      </p>
+    </div>
+  </footer>
+</Layout>

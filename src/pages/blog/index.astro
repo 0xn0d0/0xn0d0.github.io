@@ -1,0 +1,103 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const posts = [
+  {
+    title: "Exploiting XXE Vulnerabilities in Modern Web Applications",
+    date: "2024-01-15",
+    excerpt: "A deep dive into XML External Entity injection vulnerabilities, with practical examples and exploitation techniques for security researchers.",
+    tags: ["Web Security", "XXE", "Penetration Testing"]
+  },
+  {
+    title: "Building Your Home Lab for Penetration Testing",
+    date: "2024-01-08",
+    excerpt: "Step-by-step guide to setting up a complete penetration testing lab using VirtualBox, Vulnhub machines, and essential tools.",
+    tags: ["Lab Setup", "Beginners", "Infrastructure"]
+  },
+  {
+    title: "Advanced SQL Injection Bypass Techniques",
+    date: "2023-12-20",
+    excerpt: "Modern WAF bypass methods for SQL injection, including character encoding tricks, comment obfuscation, and time-based techniques.",
+    tags: ["SQL Injection", "WAF Bypass", "Web Security"]
+  },
+  {
+    title: "Understanding Deserialization Attacks",
+    date: "2023-12-10",
+    excerpt: "Comprehensive guide to object deserialization vulnerabilities in Java, PHP, and Python applications with real-world examples.",
+    tags: ["Web Security", "Deserialization", "Exploitation"]
+  }
+];
+---
+
+<Layout title="> blog | nodo portfolio">
+  <header>
+    <nav>
+      <div class="logo">nodo@cyber</div>
+      <ul class="nav-links">
+        <li><a href="/">home</a></li>
+        <li><a href="/about">about</a></li>
+        <li><a href="/blog">blog</a></li>
+        <li><a href="/contact">contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="terminal-title">blog.sh</span>
+          </div>
+          <div class="terminal-body">
+            <div class="output-line">
+              <span class="prompt">root@cyber</span>:<span class="prompt-path">~/blog</span>$ 
+              <span class="info">ls</span> -la
+            </div>
+            <div class="output-line" style="margin-top: 15px;">
+              <span class="comment"># Total posts:</span> <span class="success">4</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="blog-grid">
+          {posts.map((post) => (
+            <article class="blog-card">
+              <div class="blog-date">> {post.date}</div>
+              <h2 class="blog-title">{post.title}</h2>
+              <p class="blog-excerpt">{post.excerpt}</p>
+              <div class="blog-tags">
+                {post.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              <a href={`/blog/${post.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} class="btn" style="margin-top: 15px; display: inline-block; padding: 8px 20px; font-size: 0.85rem;">
+                read more ->
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <div class="terminal-output" style="margin-top: 40px;">
+          <div class="output-line">
+            <span class="prompt">$</span> grep -r "tags" ./blog/ | wc -l
+          </div>
+          <div class="output-line">
+            <span class="success">[+] 12 unique topics covered</span>
+          </div>
+          <div class="output-line" style="margin-top: 15px;">
+            <span class="prompt">$</span> <span class="cursor"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="color: var(--text-secondary); font-size: 0.85rem;">
+        <span class="prompt">$</span> echo "Stay curious, stay secure"
+      </p>
+    </div>
+  </footer>
+</Layout>

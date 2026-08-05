@@ -3,6 +3,20 @@ import Layout from '../../layouts/Layout.astro';
 
 const posts = [
   {
+    title: "Burp Suite Pro — API Security Testing Runbook",
+    date: "2026-08-05",
+    excerpt: "A downloadable, tick-box runbook for authorized API security testing: pre-flight, discovery, OWASP API Top 10 matrix, active scanning, and reporting.",
+    tags: ["API Security", "Burp Suite", "Runbook"],
+    url: "/burp-api-runbook.md"
+  },
+  {
+    title: "API Wordlists Collection",
+    date: "2026-08-05",
+    excerpt: "Curated wordlists for API endpoint discovery and hidden-parameter fuzzing: 290k+ real REST routes from HTTP Archive, Swagger-derived paths, params lists, and more.",
+    tags: ["Wordlists", "Recon", "Bug Bounty"],
+    url: "https://github.com/0xn0d0/api-wordlists"
+  },
+  {
     title: "Exploiting XXE Vulnerabilities in Modern Web Applications",
     date: "2024-01-15",
     excerpt: "A deep dive into XML External Entity injection vulnerabilities, with practical examples and exploitation techniques for security researchers.",
@@ -55,7 +69,7 @@ const posts = [
               <span class="info">ls</span> -la
             </div>
             <div class="output-line" style="margin-top: 15px;">
-              <span class="comment"># Total posts:</span> <span class="success">4</span>
+              <span class="comment"># Total posts:</span> <span class="success">6</span>
             </div>
           </div>
         </div>
@@ -71,7 +85,7 @@ const posts = [
                   <span class="tag">{tag}</span>
                 ))}
               </div>
-              <a href={`/blog/${post.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} class="btn" style="margin-top: 15px; display: inline-block; padding: 8px 20px; font-size: 0.85rem;">
+              <a href={post.url ?? `/blog/${post.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} target={post.url ? "_blank" : undefined} rel={post.url ? "noopener noreferrer" : undefined} class="btn" style="margin-top: 15px; display: inline-block; padding: 8px 20px; font-size: 0.85rem;">
                 read more ->
               </a>
             </article>

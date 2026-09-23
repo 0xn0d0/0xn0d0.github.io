@@ -58,7 +58,8 @@ import localSecguyImage from '../cyber-portfolio/img/ascii-art.png';
 <span class="info">  contact</span>    - Get in touch</br>
 <span class="info">  clear</span>      - Clear terminal</br>
 <span class="info">  sudo</span>       - Run as superuser</br>
-<span class="info">  theme</span>      - Switch themes (cyberpunk/amber/matrix/bluesteel/default)`,
+<span class="info">  theme</span>      - Switch themes (cyberpunk/amber/matrix/bluesteel/default)</br>
+<span class="info">  pixelate</span>   - Toggle animated pixel background (on/off)`,
 
       whoami: () => `<span class="prompt">$</span> cat ./bio.txt
 
@@ -248,6 +249,33 @@ import localSecguyImage from '../cyber-portfolio/img/ascii-art.png';
         
         return `<span class="error">[!] Unknown theme:</span> ${newTheme}
 <span class="comment"># Available: cyberpunk, amber, matrix, bluesteel, default</span>`;
+      },
+
+      pixelate: (args) => {
+        const current = window.__pixelBgOn ? window.__pixelBgOn() : false;
+        const action = args[1] ? args[1].toLowerCase() : 'toggle';
+
+        let enabled;
+        if (action === 'on' || action === 'enable' || action === '1' || action === 'true') {
+          enabled = true;
+        } else if (action === 'off' || action === 'disable' || action === '0' || action === 'false') {
+          enabled = false;
+        } else if (action === 'toggle') {
+          enabled = !current;
+        } else {
+          return `<span class="error">[!] Unknown argument:</span> ${escapeHtml(args[1])}
+<span class="comment"># Usage: pixelate [on|off|toggle]</span>`;
+        }
+
+        if (typeof window.__setPixelBg === 'function') {
+          window.__setPixelBg(enabled);
+        }
+
+        const state = enabled ? 'enabled' : 'disabled';
+        return `<span class="prompt">$</span> pixelate
+
+<span class="success">[+] Pixel background ${state}</span>
+<span class="comment"># ${enabled ? 'Animated pixel field active. Try moving your mouse around.' : 'Back to the plain terminal. Try: pixelate'}</span>`;
       },
 
       ls: () => `<span class="prompt">$</span> ls -la

@@ -18,9 +18,217 @@ const { title, description = 'Cybersecurity Professional Portfolio' } = Astro.pr
   </head>
   <body>
     <div class="matrix-bg"></div>
+    <canvas id="pixel-bg" aria-hidden="true"></canvas>
     <slot />
   </body>
 </html>
+
+<script>
+  (() => {
+    const pixelBg = {
+      canvas: null,
+      ctx: null,
+      running: false,
+      reducedMotion: false,
+      dpr: 1,
+      cols: 0,
+      rows: 0,
+      cellSize: 0,
+      noise: null,
+      hashes: null,
+      sparks: [],
+      time: 0,
+      rafId: 0,
+      colors: { bg: null, dim: null, mid: null, lit: null, accent: null },
+
+      init() {
+        this.canvas = document.getElementById('pixel-bg');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        this.noise = this.makeNoise(128);
+        this.hashes = [];
+        for (let i = 0; i < 1024; i++) this.hashes.push(Math.random());
+
+        const resize = () => this.resize();
+        window.addEventListener('resize', resize, { passive: true });
+        this.resize();
+
+        document.addEventListener('mousemove', (e) => this.spark(e.clientX, e.clientY, 1), { passive: true });
+        document.addEventListener('mousedown', (e) => this.spark(e.clientX, e.clientY, 2));
+
+        const themeObserver = new MutationObserver(() => this.refreshColors());
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        this.refreshColors();
+
+        const state = localStorage.getItem('pixel-bg');
+        this.set(!!(state && state !== 'off'));
+      },
+
+      resize() {
+        if (!this.canvas) return;
+        this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        this.canvas.width = Math.floor(w * this.dpr);
+        this.canvas.height = Math.floor(h * this.dpr);
+        this.canvas.style.width = w + 'px';
+        this.canvas.style.height = h + 'px';
+        this.cellSize = Math.max(8, Math.min(24, Math.round(Math.min(w, h) / 54)));
+        this.cols = Math.ceil(w / this.cellSize);
+        this.rows = Math.ceil(h / this.cellSize);
+        if (this.running) this.drawStatic();
+      },
+
+      makeNoise(size) {
+        const grid = new Float32Array(size * size);
+        let seed = 10407530;
+        const rand = () => {
+          seed ^= seed << 13;
+          seed ^= seed >>> 17;
+          seed ^= seed << 5;
+          return ((seed >>> 0) % 10000) / 10000;
+        };
+        for (let i = 0; i < grid.length; i++) grid[i] = rand() * 2 - 1;
+        const n = (x, y) => {
+          const xi = Math.floor(x);
+          const yi = Math.floor(y);
+          const xf = smoothstep(x - xi);
+          const yf = smoothstep(y - yi);
+          const a = grid[((yi % size) * size + (xi % size))] || 0;
+          const b = grid[((yi % size) * size + ((xi + 1) % size))] || 0;
+          const c = grid[(((yi + 1) % size) * size + (xi % size))] || 0;
+          const d = grid[(((yi + 1) % size) * size + ((xi + 1) % size))] || 0;
+          return lerp(lerp(a, b, xf), lerp(c, d, xf), yf);
+        };
+        const smoothstep = (t) => t * t * (3 - 2 * t);
+        const lerp = (a, b, t) => a + (b - a) * t;
+        return (x, y) => n(x / size * 3, y / size * 3);
+      },
+
+      refreshColors() {
+        const cs = getComputedStyle(document.body);
+        const parse = (v) => {
+          const m = /rgba?\(([^)]+)\)/.exec(v);
+          if (!m) return null;
+          const p = m[1].split(',').map((s) => parseFloat(s.trim()));
+          return [p[0] | 0, p[1] | 0, p[2] | 0];
+        };
+        this.colors = {
+          dim: parse(cs.getPropertyValue('--accent-green-dim')) || [0, 204, 51],
+          mid: parse(cs.getPropertyValue('--accent-green')) || [0, 255, 65],
+          lit: parse(cs.getPropertyValue('--accent-cyan')) || [0, 217, 255],
+          accent: parse(cs.getPropertyValue('--accent-cyan')) || [0, 217, 255],
+          bg: parse(cs.getPropertyValue('--bg-primary')) || [10, 14, 20],
+        };
+      },
+
+      spark(x, y, strength) {
+        if (!this.running) return;
+        const col = Math.floor(x / this.cellSize);
+        const row = Math.floor(y / this.cellSize);
+        this.sparks.push({ col, row, strength, age: 0 });
+      },
+
+      set(on) {
+        document.documentElement.setAttribute('data-pixel-bg', on ? 'on' : 'off');
+        if (on) this.start();
+        else this.stop();
+      },
+
+      start() {
+        if (this.running) return;
+        this.running = true;
+        if (this.reducedMotion) {
+          this.drawStatic();
+          return;
+        }
+        const render = () => {
+          this.step();
+          this.rafId = requestAnimationFrame(render);
+        };
+        this.rafId = requestAnimationFrame(render);
+      },
+
+      stop() {
+        this.running = false;
+        cancelAnimationFrame(this.rafId);
+        if (this.ctx) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      },
+
+      drawStatic() {
+        const t = 0;
+        this.step(t);
+      },
+
+      step(t) {
+        if (!this.ctx) return;
+        const { ctx, cols, rows, cellSize, dpr, noise, hashes, colors } = this;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, cols * cellSize, rows * cellSize);
+
+        const time = t || this.time;
+        this.time += 0.016;
+
+        let sparkCells = new Map();
+        let activeSparks = [];
+        for (const s of this.sparks) {
+          if (s.age > 30) continue;
+          s.age += 1;
+          activeSparks.push(s);
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              const c = s.col + dc;
+              const r = s.row + dr;
+              if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
+              const dist = Math.sqrt(dr * dr + dc * dc);
+              if (dist > 2.4) continue;
+              const glow = (1 - dist / 2.4) * (3 - s.age / 30) * s.strength;
+              sparkCells.set(`${c},${r}`, Math.max(sparkCells.get(`${c},${r}`) || 0, glow));
+            }
+          }
+        }
+        this.sparks = activeSparks;
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const n = noise(c * 0.12 + time * 0.15, r * 0.12 - time * 0.1);
+            const shimmer = Math.sin(time * 1.5 + c * 0.35 + r * 0.55) * 0.18;
+            const dither = 0.78 * ((hashes[((r & 7) * 8 + (c & 7)) & 63] + 0.5) / 64) + 0.22 * hashes[(r * cols + c) % 1024];
+            let l = n + shimmer - dither;
+            const spark = sparkCells.get(`${c},${r}`);
+            if (spark) l += spark;
+            if (l < 0.05) continue;
+
+            const x = c * cellSize;
+            const y = r * cellSize;
+            const inset = cellSize * 0.18;
+            const isSpark = !!spark;
+            const color = isSpark ? colors.lit : (l > 0.35 ? colors.mid : (l > 0.18 ? colors.accent : colors.dim));
+            ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+            const alpha = Math.min(1, 0.25 + l * 2);
+            ctx.globalAlpha = alpha;
+            ctx.fillRect(x + inset, y + inset, cellSize - inset * 2, cellSize - inset * 2);
+          }
+        }
+        ctx.globalAlpha = 1;
+      },
+    };
+
+    pixelBg.init();
+
+    window.__pixelBgOn = () => {
+      return (localStorage.getItem('pixel-bg') || '').length > 0 && pixelBg.running;
+    };
+
+    window.__setPixelBg = (on) => {
+      const value = on ? 'on' : 'off';
+      localStorage.setItem('pixel-bg', value);
+      pixelBg.set(!!on);
+    };
+  })();
+</script>
 
 <style is:global>
   @import '../styles/global.css';

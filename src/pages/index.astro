@@ -208,10 +208,60 @@ import Layout from '../layouts/Layout.astro';
 
       clear: () => 'CLEAR',
 
-      sudo: () => `<span class="error">[!] Permission denied</span>
-<span class="warning">[!] This incident will be reported.</br> Origin ip-reverse lookup in progress...</br> All systems and credentials compromised!</br></span>
+      sudo: () => async (el) => {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-<span class="comment"># Just kidding. Nice try 😄</span>`,
+        const append = (html) => {
+          if (!el.isConnected) return false;
+          const line = document.createElement('div');
+          line.className = 'sudo-line';
+          line.innerHTML = html;
+          el.appendChild(line);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+          return true;
+        };
+
+        const bar = (label, duration) => new Promise((resolve) => {
+          const width = 24;
+          const t0 = Date.now();
+          let barEl = null;
+          const step = () => {
+            if (!el.isConnected) return resolve();
+            const pct = Math.min(100, Math.round(((Date.now() - t0) / duration) * 100));
+            const filled = Math.max(1, Math.round((pct / 100) * width));
+            const html = `<span class="warning">${'#'.repeat(filled)}${'-'.repeat(width - filled)}</span> ${String(pct).padStart(3, ' ')}%  ${label}`;
+            if (!barEl) {
+              barEl = document.createElement('div');
+              barEl.className = 'sudo-line';
+              el.appendChild(barEl);
+            }
+            barEl.innerHTML = html;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            if (pct < 100) {
+              setTimeout(step, 90);
+            } else {
+              resolve();
+            }
+          };
+          step();
+        });
+
+        append('<span class="error">[!] Permission denied</span>');
+        await delay(400);
+        if (!append('<span class="warning">[!] This incident will be reported.</span>')) return;
+
+        await delay(500);
+        if (reduced) {
+          append(`<span class="warning">${'#'.repeat(24)}</span> 100%  Origin ip-reverse lookup in progress...`);
+        } else {
+          await bar('Origin ip-reverse lookup in progress...', 4000);
+        }
+
+        if (!append('<span class="warning">All systems and credentials compromised!</span>')) return;
+        await delay(300);
+        append('<span class="comment"># Just kidding. Nice try 😄</span>');
+      },
 
       theme: (args) => {
         const themes = ['cyberpunk', 'amber', 'matrix', 'bluesteel'];
@@ -333,8 +383,13 @@ total 5
 
       const outputDiv = document.createElement('div');
       outputDiv.className = 'terminal-output-cmd';
-      outputDiv.innerHTML = output;
       terminalBody.appendChild(outputDiv);
+
+      if (typeof output === 'function') {
+        output(outputDiv);
+      } else {
+        outputDiv.innerHTML = output;
+      }
 
       terminalBody.scrollTop = terminalBody.scrollHeight;
     }

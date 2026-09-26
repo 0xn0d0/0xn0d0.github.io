@@ -753,8 +753,7 @@ html[data-pixel-bg="on"] .terminal-input-line {
 }
 
 html[data-pixel-bg="on"] .pixel-art-container {
-  background: var(--bg-terminal-alpha);
-  backdrop-filter: blur(4px);
+  background: var(--bg-terminal);
 }
 
 html[data-pixel-bg="on"] header {
